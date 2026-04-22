@@ -1,4 +1,5 @@
 from collections import deque
+from datetime import datetime, timezone
 import os
 
 import numpy as np
@@ -40,6 +41,9 @@ class InferenceService:
         window = np.asarray(self.buffer, dtype=np.float32)
         processed = preprocess_service.process(window)
         prediction = model_service.predict(processed)
+        prediction["timestamp"] = datetime.now(timezone.utc).isoformat()
+        if "probability" in prediction and "probabilities" not in prediction:
+            prediction["probabilities"] = prediction["probability"]
 
         self._samples_since_last_prediction = 0
         app_state.latest_prediction = prediction
@@ -52,5 +56,5 @@ class InferenceService:
 inference_service = InferenceService(
     window_size=int(os.getenv("WINDOW_SIZE", "128")),
     step_size=int(os.getenv("STEP_SIZE", "64")),
-    feature_dim=int(os.getenv("FEATURE_DIM", "30")),
+    feature_dim=int(os.getenv("FEATURE_DIM", str(model_service.feature_dim))),
 )
