@@ -75,9 +75,6 @@ class AuthService:
             )
 
             return {
-              
-
-                
                     "access_token": access_token,
                     "user": {
                         "user_id": user.id,

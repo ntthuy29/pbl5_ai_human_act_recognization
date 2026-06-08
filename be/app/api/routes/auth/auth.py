@@ -24,17 +24,17 @@ def register(payload: RegisterRequest):
     except ValueError as exc:
         error_code = str(exc)
         if error_code == "EMAIL_ALREADY_REGISTERED":
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email đã được đăng ký")
         if error_code == "PASSWORDS_DO_NOT_MATCH":
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Passwords do not match")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Mật khẩu xác nhận không khớp")
         if error_code == "INVALID_EMAIL":
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid email format")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Định dạng email không hợp lệ")
         if error_code == "WEAK_PASSWORD":
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Password must be at least 8 characters",
+                detail="Mật khẩu phải có ít nhất 8 ký tự",
             )
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid registration data")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Dữ liệu đăng ký không hợp lệ")
 
     return RegisterResponse(
         success=True,
@@ -53,10 +53,10 @@ def login(payload: LoginRequest):
     except ValueError as exc:
         error_code = str(exc)
         if error_code == "INVALID_EMAIL":
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid email format")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Định dạng email không hợp lệ")
         if error_code == "INVALID_CREDENTIALS":
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid login data")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Sai email hoặc mật khẩu")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Dữ liệu đăng nhập không hợp lệ")
 
     return LoginResponse(
         success=True,

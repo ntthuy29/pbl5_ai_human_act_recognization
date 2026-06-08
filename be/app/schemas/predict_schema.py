@@ -12,7 +12,7 @@ class PredictRequest(BaseModel):
 
 
 class PredictData(BaseModel):
-	action: str
+	presence: str
 	confidence: float
 	probability: Dict[str, float]
 

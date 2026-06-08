@@ -4,7 +4,7 @@ from collections import deque
 from preprocess_service import PreprocessService
 from model_service import ModelService
 
-class ActionRecognitionPipeline:
+class HumanPresenceDetectionPipeline:
     def __init__(self, model_path: str, feature_dim: int, window_size: int = 128, step_size: int = 64):
         self.buffer = deque(maxlen=window_size)  # lưu CSI realtime
         self.window_size = window_size
@@ -16,7 +16,7 @@ class ActionRecognitionPipeline:
     def add_csi_sample(self, csi_sample: np.ndarray) -> dict | None:
         """
         Thêm 1 mẫu CSI realtime vào buffer.
-        Trả về kết quả dự đoán khi đủ window, else None.
+        Trả về kết quả phát hiện khi đủ window, else None.
         """
         self.buffer.append(csi_sample)
         self._step_counter += 1

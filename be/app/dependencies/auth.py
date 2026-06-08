@@ -25,4 +25,22 @@ def get_current_user(token: HTTPAuthorizationCredentials = Depends(HTTPBearer())
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     user = auth_service.get_me(user_id=user_id, db=db)
     return user
+
+
+def get_current_user_optional(
+    token: HTTPAuthorizationCredentials | None = Depends(HTTPBearer(auto_error=False)),
+    db = Depends(get_db),
+):
+    if token is None:
+        return None
+
+    try:
+        payload = auth.decode_access_token(token.credentials)
+        user_id: int = payload.get("user_id")
+        if user_id is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+    return auth_service.get_me(user_id=user_id, db=db)
     
